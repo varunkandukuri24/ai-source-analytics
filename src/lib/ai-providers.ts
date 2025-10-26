@@ -95,7 +95,7 @@ export async function analyzeSourcesWithOpenAI(query: string): Promise<SourceAna
       }
     })
 
-    const uniqueDomains = [...new Set(sources.map(s => s.domain))]
+    const uniqueDomains = Array.from(new Set(sources.map(s => s.domain)))
     
     return {
       provider: 'openai',
@@ -147,7 +147,7 @@ export async function analyzeSourcesWithClaude(query: string): Promise<SourceAna
       }
     })
 
-    const uniqueDomains = [...new Set(sources.map(s => s.domain))]
+    const uniqueDomains = Array.from(new Set(sources.map(s => s.domain)))
     
     return {
       provider: 'claude',
@@ -194,7 +194,7 @@ export async function analyzeSourcesWithGemini(query: string): Promise<SourceAna
       }
     })
 
-    const uniqueDomains = [...new Set(sources.map(s => s.domain))]
+    const uniqueDomains = Array.from(new Set(sources.map(s => s.domain)))
     
     return {
       provider: 'gemini',
