@@ -6,16 +6,60 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Search, Zap, BarChart3, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react"
-import { useState } from "react"
+import { Search, Zap, BarChart3, Sparkles, ArrowRight, CheckCircle2, Loader2 } from "lucide-react"
+import { useState, useTransition } from "react"
+import { compareAIProviders, type AISearchResponse } from "@/app/actions/compare-ai"
+import { ComparisonResults } from "@/components/comparison-results"
 
 export default function HomePage() {
   const [query, setQuery] = useState("")
+  const [results, setResults] = useState<AISearchResponse[] | null>(null)
+  const [isPending, startTransition] = useTransition()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement search functionality
-    console.log("Searching for:", query)
+    if (!query.trim()) return
+
+    startTransition(async () => {
+      const comparisonResults = await compareAIProviders(query)
+      setResults(comparisonResults)
+    })
+  }
+
+  if (results) {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50 bg-background/80">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <button
+              onClick={() => {
+                setResults(null)
+                setQuery("")
+              }}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            >
+              <div className="size-8 rounded-lg bg-primary flex items-center justify-center">
+                <Search className="size-4 text-primary-foreground" />
+              </div>
+              <span className="font-semibold text-lg">AI Compare</span>
+            </button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                setResults(null)
+                setQuery("")
+              }}
+            >
+              New Search
+            </Button>
+          </div>
+        </header>
+
+        <ComparisonResults results={results} />
+      </div>
+    )
   }
 
   return (
@@ -74,11 +118,26 @@ export default function HomePage() {
                   placeholder="Ask anything... Compare responses from GPT-4, Claude, and Gemini"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
+                  disabled={isPending}
                   className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/60"
                 />
-                <Button type="submit" size="lg" className="rounded-full gap-2 group/btn" disabled={!query.trim()}>
-                  Compare
-                  <ArrowRight className="size-4 group-hover/btn:translate-x-1 transition-transform" />
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="rounded-full gap-2 group/btn"
+                  disabled={!query.trim() || isPending}
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      Comparing...
+                    </>
+                  ) : (
+                    <>
+                      Compare
+                      <ArrowRight className="size-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
