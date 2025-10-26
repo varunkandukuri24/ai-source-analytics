@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     
     // Calculate overall diversity and common/unique sources
     const allDomains = analyses.flatMap(a => a.uniqueDomains)
-    const uniqueDomains = [...new Set(allDomains)]
+    const uniqueDomains = Array.from(new Set(allDomains))
     const overallDiversity = uniqueDomains.length
     
     // Find common sources (domains that appear in multiple providers)
