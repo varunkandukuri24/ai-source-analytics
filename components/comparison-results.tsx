@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Clock, ExternalLink, AlertCircle, TrendingUp, Globe } from "lucide-react"
+import { Clock, ExternalLink, AlertCircle, TrendingUp, Globe, FileText, Award, Calendar } from "lucide-react"
 import type { AISearchResponse } from "@/app/actions/compare-ai"
 
 interface ComparisonResultsProps {
@@ -38,6 +38,13 @@ const categoryColors = {
   commercial: "bg-orange-500/10 text-orange-500 border-orange-500/20",
   social: "bg-pink-500/10 text-pink-500 border-pink-500/20",
   other: "bg-gray-500/10 text-gray-500 border-gray-500/20",
+}
+
+function formatNumber(num: number): string {
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1)}k`
+  }
+  return num.toString()
 }
 
 export function ComparisonResults({ results }: ComparisonResultsProps) {
@@ -93,10 +100,10 @@ export function ComparisonResults({ results }: ComparisonResultsProps) {
                     </div>
                   </div>
 
-                  {/* Analytics */}
                   {!result.error && result.references.length > 0 && (
                     <div className="space-y-3">
-                      <div className="flex items-center gap-4 text-xs">
+                      {/* Primary metrics */}
+                      <div className="grid grid-cols-2 gap-2 text-xs">
                         <div className="flex items-center gap-1.5 text-muted-foreground">
                           <Clock className="size-3.5" />
                           <span>{(result.responseTime / 1000).toFixed(2)}s</span>
@@ -107,10 +114,35 @@ export function ComparisonResults({ results }: ComparisonResultsProps) {
                         </div>
                         <div className="flex items-center gap-1.5 text-muted-foreground">
                           <TrendingUp className="size-3.5" />
-                          <span>{analytics.avgRelevance.toFixed(0)}% avg</span>
+                          <span>{analytics.avgRelevance.toFixed(0)}% relevance</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-muted-foreground">
+                          <Award className="size-3.5" />
+                          <span>{result.averageAuthorityScore.toFixed(0)}% authority</span>
                         </div>
                       </div>
 
+                      {/* Token metrics */}
+                      <div className="p-2.5 rounded-lg bg-muted/50 border border-border/50">
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div>
+                            <div className="text-muted-foreground mb-0.5">Query Tokens</div>
+                            <div className="font-mono font-semibold">{formatNumber(result.totalTokensUsed)}</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground mb-0.5">Content Tokens</div>
+                            <div className="font-mono font-semibold">{formatNumber(result.totalTokensRead)}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Source diversity */}
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Source Diversity</span>
+                        <span className="font-semibold">{result.sourceDiversity.toFixed(0)}%</span>
+                      </div>
+
+                      {/* Category breakdown */}
                       <div className="flex flex-wrap gap-1.5">
                         {Object.entries(analytics.categories).map(([category, count]) => (
                           <Badge
@@ -158,11 +190,34 @@ export function ComparisonResults({ results }: ComparisonResultsProps) {
                             <ExternalLink className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
                           <span className="text-xs text-muted-foreground truncate">{ref.domain}</span>
                           <Badge variant="outline" className={`text-xs ${categoryColors[ref.category]}`}>
                             {ref.category}
                           </Badge>
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-muted/50 text-muted-foreground border-border/50"
+                          >
+                            <FileText className="size-3 mr-1" />
+                            {formatNumber(ref.estimatedTokens)}
+                          </Badge>
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-muted/50 text-muted-foreground border-border/50"
+                          >
+                            <Award className="size-3 mr-1" />
+                            {ref.authorityScore}
+                          </Badge>
+                          {ref.publishDate && (
+                            <Badge
+                              variant="outline"
+                              className="text-xs bg-muted/50 text-muted-foreground border-border/50"
+                            >
+                              <Calendar className="size-3 mr-1" />
+                              {ref.publishDate}
+                            </Badge>
+                          )}
                           <Badge variant="outline" className={`text-xs ml-auto ${config.badgeColor}`}>
                             {ref.relevanceScore}%
                           </Badge>
