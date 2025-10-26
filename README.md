@@ -22,15 +22,3 @@ This tool analyzes which websites and sources each AI provider would reference w
 - Vercel AI SDK
 - Lucide React icons
 
-## Getting Started
-
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Add your API keys to `.env.local`:
-   \`\`\`
-   OPENAI_API_KEY=your_key_here
-   ANTHROPIC_API_KEY=your_key_here
-   GEMINI_API_KEY=your_key_here
-   \`\`\`
-4. Run the development server: `npm run dev`
-5. Open [http://localhost:3000](http://localhost:3000)
