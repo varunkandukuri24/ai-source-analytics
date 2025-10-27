@@ -105,21 +105,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border/40 mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="size-6 rounded bg-primary flex items-center justify-center">
-                <Search className="size-3 text-primary-foreground" />
-              </div>
-              <span className="font-semibold">AI Compare</span>
-            </div>
-            <p className="text-sm text-muted-foreground">Built with Next.js, TypeScript, and Tailwind CSS</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

@@ -243,18 +243,25 @@ export default function ContextExplorerPage() {
                 <Label htmlFor="baseQuery" className="text-base font-semibold">
                   Base Query
                 </Label>
-                <p className="text-sm text-muted-foreground">
-                  Enter a canonical query to explore across different contexts
+                <p className="text-sm text-muted-foreground">Enter a query to explore across different contexts</p>
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-chart-3 rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity" />
+                  <div className="relative flex items-center gap-2 bg-card border-2 border-border/50 rounded-full p-2 group-hover:border-primary/50 transition-colors">
+                    <Search className="size-5 text-muted-foreground ml-4" />
+                    <Input
+                      id="baseQuery"
+                      type="text"
+                      placeholder="Enter a query to explore context sensitivity..."
+                      value={baseQuery}
+                      onChange={(e) => setBaseQuery(e.target.value)}
+                      disabled={isPending}
+                      className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base px-4"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Try: "top travel destinations" or "best programming languages for beginners"
                 </p>
-                <Input
-                  id="baseQuery"
-                  type="text"
-                  placeholder="e.g., What are the best energy-efficient laptops?"
-                  value={baseQuery}
-                  onChange={(e) => setBaseQuery(e.target.value)}
-                  disabled={isPending}
-                  className="text-base"
-                />
               </div>
 
               <div className="space-y-4">
@@ -461,29 +468,6 @@ export default function ContextExplorerPage() {
               </Button>
             </form>
           </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <h3 className="font-semibold mb-2">Context Drift Map</h3>
-              <p className="text-sm text-muted-foreground">
-                Visualize how citation overlap changes across different contexts
-              </p>
-            </Card>
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <h3 className="font-semibold mb-2">Domain Frequency Heatmap</h3>
-              <p className="text-sm text-muted-foreground">
-                See which domains are cited most frequently across contexts
-              </p>
-            </Card>
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <h3 className="font-semibold mb-2">Citation Consistency Scorecard</h3>
-              <p className="text-sm text-muted-foreground">Compare model robustness and citation stability</p>
-            </Card>
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <h3 className="font-semibold mb-2">Insights Layer</h3>
-              <p className="text-sm text-muted-foreground">Discover which contexts cause the largest citation drift</p>
-            </Card>
-          </div>
         </div>
       </div>
     </div>

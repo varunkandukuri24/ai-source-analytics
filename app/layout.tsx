@@ -23,6 +23,11 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`font-sans antialiased`}>
         {children}
+        <footer className="border-t border-white/10 py-6 mt-12">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-sm text-muted-foreground">Side project by Varun Kandukuri</p>
+          </div>
+        </footer>
         <Analytics />
       </body>
     </html>
